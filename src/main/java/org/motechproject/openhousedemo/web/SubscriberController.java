@@ -78,7 +78,7 @@ public class SubscriberController {
             try {
                 
             CampaignRequest campaignRequest;
-                campaignRequest = new CampaignRequest(phoneNumber, "OPEN_HOUSE_DEMO", new LocalDate(), null);
+                campaignRequest = new CampaignRequest(phoneNumber, "OPEN_HOUSE_DEMO_SMS", new LocalDate(), null);
             
             messageCampaignService.enroll(campaignRequest);
             
