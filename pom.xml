@@ -28,6 +28,14 @@
 	<version>2.3.5</version>
         </dependency>
         
+        
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-event</artifactId>
+            <version>0.26-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        
          
 
 
@@ -168,9 +176,11 @@
         
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-message-campaign</artifactId>
+            <artifactId>message-campaign</artifactId>
             <version>${motech.version}</version>
         </dependency>
+        
+        
         
     </dependencies>
 

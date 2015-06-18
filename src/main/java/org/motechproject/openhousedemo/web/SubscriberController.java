@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.motechproject.messagecampaign.contract.*;
+import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.openhousedemo.domain.Subscriber;
 import org.springframework.http.HttpStatus;
@@ -29,14 +30,48 @@ public class SubscriberController {
     @Autowired
     private SubscriberService subscriberService;
     
-     @Autowired
+    @Autowired
     MessageCampaignService messageCampaignService;
+     
 
     private static final String OK = "OK";
 
     @RequestMapping("/status")
     @ResponseBody
     public String status() {
+        return OK;
+    }
+    
+    @RequestMapping("/reset")
+    @ResponseBody
+    public String reset() {
+        
+        List<String>  campaigns = new ArrayList<>();
+        campaigns.add("OPEN_HOUSE_DEMO_SMS");
+        campaigns.add("OPEN_HOUSE_DEMO_IVR");
+        
+        for (String campaign : campaigns) {
+            
+        try {
+            System.out.println("Stop all for " + campaign);
+            messageCampaignService.stopAll(new CampaignEnrollmentsQuery().withCampaignName(campaign));
+        } catch (Exception e) {
+            System.out.println("Error Stopping all for " + campaign + " : due to " + e.getLocalizedMessage());
+        }
+        try {
+            System.out.println("Deletion  for " + campaign);
+            messageCampaignService.deleteCampaign(campaign);
+
+            System.out.println("End Deletion for " + campaign);
+        } catch (Exception e) {
+             
+       
+        }
+        
+        }
+        
+         
+        
         return OK;
     }
 
@@ -75,10 +110,30 @@ public class SubscriberController {
             
             subscriberService.add(subscriber);
             
+            //subscription to sms
             try {
                 
             CampaignRequest campaignRequest;
-                campaignRequest = new CampaignRequest(phoneNumber, "OPEN_HOUSE_DEMO_SMS", new LocalDate(), null);
+                campaignRequest = new CampaignRequest();
+                
+                campaignRequest.setCampaignName("OPEN_HOUSE_DEMO_SMS");
+                campaignRequest.setExternalId(phoneNumber);
+                campaignRequest.setReferenceDate(new LocalDate());
+            
+            messageCampaignService.enroll(campaignRequest);
+            
+            } catch (Exception e) {
+            }
+            
+            //subscription to ivr
+            try {
+                
+            CampaignRequest campaignRequest;
+                campaignRequest = new CampaignRequest();
+                
+                campaignRequest.setCampaignName("OPEN_HOUSE_DEMO_IVR");
+                campaignRequest.setExternalId(phoneNumber);
+                campaignRequest.setReferenceDate(new LocalDate());
             
             messageCampaignService.enroll(campaignRequest);
             
